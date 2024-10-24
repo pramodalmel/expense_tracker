@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Expense</title>
+</head>
+<body>
+    <h1>Edit Expense</h1>
+    <form action="{{ url_for('edit_expense', index=index) }}" method="POST">
+        <label for="edit_date">Date (YYYY-MM-DD):</label>
+        <input type="text" id="edit_date" name="edit_date" value="{{ expense.date }}" required><br>
+        
+        <label for="edit_description">Description:</label>
+        <input type="text" id="edit_description" name="edit_description" value="{{ expense.description }}" required><br>
+        
+        <label for="edit_amount">Amount:</label>
+        <input type="text" id="edit_amount" name="edit_amount" value="{{ expense.amount }}" required><br>
+        
+        <input type="submit" value="Update Expense">
+    </form>
+    <a href="{{ url_for('index') }}">Back to Expense List</a>
+</body>
+</html>
