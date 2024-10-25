@@ -6,9 +6,11 @@
     <title>Daily Expense Tracker</title>
     <style>
         body {
+         
+            justify-content: center;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            margin: auto 0;
+            padding: 20;
             background-image: url('static/images/image.jpg');
             background-size: cover;
             background-position: center;
@@ -19,6 +21,7 @@
             width: 90%;
             margin: 0 auto;
             padding: 50px;
+            text-align:center;
             background-color: rgba(255, 255, 255, 0);
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             margin-top: 30px;
@@ -92,51 +95,67 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1><u>Daily Expense Tracker</u></h1>
-        <h2>Add an Expense</h2>
-        <form action="{{ url_for('index') }}" method="POST">
-            <label for="date">Date (YYYY-MM-DD):</label>
-            <input type="text" id="date" name="date" required><br>
-            <label for="description">Description:</label>
-            <input type="text" id="description" name="description" required><br>
-            <label for="amount">Amount:</label>
-            <input type="text" id="amount" name="amount" required><br>
-            <input type="submit" value="Add Expense">
-        </form>
+    <h1>Expense Tracker</h1>
 
-        <h2>Expenses List</h2>
-        {% if expenses %}
-            <ul>
-                {% for expense in expenses %}
-                    <li>Date: {{ expense.date }} | Description: {{ expense.description }} | Amount: ${{ expense.amount }} 
-                        <a href="{{ url_for('edit_expense', index=loop.index0) }}">Edit</a>
-                        <a href="{{ url_for('delete_expense', index=loop.index0) }}">Delete</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No expenses recorded yet.</p>
-        {% endif %}
+    <!-- Add expense form -->
+    <h2>Add an Expense</h2>
+    <form action="{{ url_for('index') }}" method="POST">
+        <label for="date">Date (YYYY-MM-DD):</label>
+        <input type="text" id="date" name="date" required><br>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required><br>
+        <label for="amount">Amount:</label>
+        <input type="text" id="amount" name="amount" required><br>
+        <input type="submit" value="Add Expense">
+    </form>
 
-        <h2>Calculate Total for a Date</h2>
-        <form action="{{ url_for('index') }}" method="POST">
-            <label for="date_total">Date (YYYY-MM-DD):</label>
-            <input type="text" id="date_total" name="date_total" required><br>
-            <input type="submit" value="Calculate Total">
-        </form>
+    <!-- Show only the last session expense -->
+    <h2>Last Added Expense</h2>
+    {% if expenses %}
+        <ul>
+            <li>{{ expenses[0].date }} - {{ expenses[0].description }}: ${{ expenses[0].amount }}</li>
+        </ul>
+    {% else %}
+        <p>No expenses added in this session yet.</p>
+    {% endif %}
 
-       <!-- Display total if calculated -->
-{% if total is not none %}
-<h3>Total expenses for the date: ${{ total }}</h3>
-<h4>Details:</h4>
-<ul>
-    {% for description, amount in total_details %}
-        <li>{{ description }}: ${{ amount }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+    <!-- Calculate total for a specific date -->
+    <h2>Calculate Total for a Date</h2>
+    <form action="{{ url_for('index') }}" method="POST">
+        <label for="date_total">Date (YYYY-MM-DD):</label>
+        <input type="text" id="date_total" name="date_total" required>
+        <input type="submit" value="Calculate Total">
+    </form>
+    {% if total %}
+        <p>Total for {{ request.form.date_total }}: ${{ total }}</p>
+    {% endif %}
 
-    </div>
+    <!-- Delete expenses -->
+    <h2>Delete Expense</h2>
+    <form action="{{ url_for('fetch_expenses_for_delete') }}" method="POST">
+        <label for="delete_date">Date (YYYY-MM-DD):</label>
+        <input type="text" id="delete_date" name="delete_date" required>
+        <input type="submit" value="Fetch Expenses">
+    </form>
+
+    {% if delete_expenses %}
+        <h3>Expenses for {{ delete_date }}</h3>
+        <ul>
+            {% for expense in delete_expenses %}
+                <li>{{ expense.description }} - ${{ expense.amount }}
+                    <form action="{{ url_for('delete_expense') }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="date" value="{{ delete_date }}">
+                        <input type="hidden" name="description" value="{{ expense.description }}">
+                        <input type="hidden" name="amount" value="{{ expense.amount }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
 </body>
 </html>
