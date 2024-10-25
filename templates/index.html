@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Expense Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Daily Expense Tracker</title>
     <style>
-        body {
-         
-            justify-content: center;
+         body {
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            margin: auto 0;
-            padding: 20;
+            margin: auto;
+            display:inline;
+            padding: 20px;
             background-image: url('static/images/image.jpg');
             background-size: cover;
             background-position: center;
@@ -18,14 +16,12 @@
         }
 
         .container {
-            width: 90%;
-            margin: 0 auto;
+            width: 80%; /* Reduce width to create space on edges */
+            margin: 0;
             padding: 50px;
-            text-align:center;
-            background-color: rgba(255, 255, 255, 0);
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.18);
             border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
@@ -45,7 +41,8 @@
         }
 
         form {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+           
         }
 
         label, input[type="submit"] {
@@ -64,11 +61,11 @@
 
         input[type="submit"] {
             margin-top: 10px;
-            padding: 7px;
+            padding: 8px;
             background-color: #4CAF50;
             color: rgba(255, 255, 255, 0.831);
             border: none;
-            border-radius: 5px;
+            border-radius: 15px;
             cursor: pointer;
         }
 
@@ -90,7 +87,7 @@
         }
 
         p {
-            color: red;
+            color: rgb(130, 134, 135);
         }
     </style>
 </head>
@@ -101,11 +98,11 @@
     <h2>Add an Expense</h2>
     <form action="{{ url_for('index') }}" method="POST">
         <label for="date">Date (YYYY-MM-DD):</label>
-        <input type="text" id="date" name="date" required><br>
+        <input type="text" id="date" name="date" placeholder="Enter date in given format"><br>
         <label for="description">Description:</label>
-        <input type="text" id="description" name="description" required><br>
+        <input type="text" id="description" name="description" placeholder="Enter discription"><br>
         <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" required><br>
+        <input type="text" id="amount" name="amount" placeholder="Enter amount"><br>
         <input type="submit" value="Add Expense">
     </form>
 
