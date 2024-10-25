@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Daily Expense Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Expense Tracker</title>
     <style>
-         body {
+        body {
+            justify-content: center;
+            display: inline;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            margin: auto;
-            display:inline;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             background-image: url('static/images/image.jpg');
             background-size: cover;
             background-position: center;
@@ -16,12 +18,15 @@
         }
 
         .container {
-            width: 80%; /* Reduce width to create space on edges */
-            margin: 0;
+            width: 90%;
+            margin: 0 auto;
             padding: 50px;
-            background-color: rgba(255, 255, 255, 0.18);
+            padding-left: 30px;  /* Add padding to avoid text touching the screen */
+            padding-right: 30px;
+            background-color: rgba(255, 255, 255, 0);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
             border-radius: 15px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
@@ -41,8 +46,7 @@
         }
 
         form {
-            margin-bottom: 30px;
-           
+            margin-bottom: 20px;
         }
 
         label, input[type="submit"] {
@@ -55,22 +59,25 @@
         input[type="text"] {
             color: #000000a5;
             border-radius: 15px;
-            width: 60%;
-            padding: 8px;
+            width: 50%;  /* Reduce width for more space */
+            padding: 7px; /* Add more padding inside the input */
+            margin-bottom: 10px; /* Add some space between input fields */
         }
 
         input[type="submit"] {
             margin-top: 10px;
-            padding: 8px;
+            padding: 7px;
             background-color: #4CAF50;
             color: rgba(255, 255, 255, 0.831);
             border: none;
             border-radius: 15px;
             cursor: pointer;
+            width: 10%; /* Reduce width */
         }
 
         input[type="submit"]:hover {
             background-color: #45a049;
+            width:10%;
         }
 
         ul {
@@ -79,77 +86,82 @@
         }
 
         li {
-            background-color: #eeeeee66;
-            width: 60%;
+            background-color: #eeeeee7c;
+            width: 50%; /* Adjust width */
             margin: 5px 0;
-            padding: 8px;
+            padding: 7px;
             border-radius: 15px;
         }
 
         p {
-            color: rgb(130, 134, 135);
+            background-color:#eeeeee7c;
+            padding: 7px;
+            border-radius: 15px;
+            width:50%;
         }
     </style>
 </head>
 <body>
     <h1>Expense Tracker</h1>
 
-    <!-- Add expense form -->
-    <h2>Add an Expense</h2>
-    <form action="{{ url_for('index') }}" method="POST">
-        <label for="date">Date (YYYY-MM-DD):</label>
-        <input type="text" id="date" name="date" placeholder="Enter date in given format"><br>
-        <label for="description">Description:</label>
-        <input type="text" id="description" name="description" placeholder="Enter discription"><br>
-        <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="amount" placeholder="Enter amount"><br>
-        <input type="submit" value="Add Expense">
-    </form>
+    <div class="container">
+        <!-- Add expense form -->
+        <h2>Add an Expense</h2>
+        <form action="{{ url_for('index') }}" method="POST">
+            <label for="date">Date (YYYY-MM-DD):</label>
+            <input type="text" id="date" name="date" required placeholder="Enter date in given format"><br>
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required placeholder="Enter description"><br>
+            <label for="amount">Amount:</label>
+            <input type="text" id="amount" name="amount" required placeholder="Enter amount"><br>
+            <input type="submit" value="Add Expense">
+        </form>
 
-    <!-- Show only the last session expense -->
-    <h2>Last Added Expense</h2>
-    {% if expenses %}
-        <ul>
-            <li>{{ expenses[0].date }} - {{ expenses[0].description }}: ${{ expenses[0].amount }}</li>
-        </ul>
-    {% else %}
-        <p>No expenses added in this session yet.</p>
-    {% endif %}
+        <!-- Show only the last session expense -->
+        <h2>Last Added Expense</h2>
+        {% if expenses %}
+            <ul>
+                <li>{{ expenses[0].date }} - {{ expenses[0].description }}: ${{ expenses[0].amount }}</li>
+            </ul>
+        {% else %}
+            <p>No expenses added in this session yet.</p>
+        {% endif %}
 
-    <!-- Calculate total for a specific date -->
-    <h2>Calculate Total for a Date</h2>
-    <form action="{{ url_for('index') }}" method="POST">
-        <label for="date_total">Date (YYYY-MM-DD):</label>
-        <input type="text" id="date_total" name="date_total" required>
-        <input type="submit" value="Calculate Total">
-    </form>
-    {% if total %}
-        <p>Total for {{ request.form.date_total }}: ${{ total }}</p>
-    {% endif %}
+        <!-- Calculate total for a specific date -->
+        <h2>Calculate Total for a Date</h2>
+        <form action="{{ url_for('index') }}" method="POST">
+            <label for="date_total">Date (YYYY-MM-DD):</label>
+            <input type="text" id="date_total" name="date_total" required>
+            <input type="submit" value="Calculate Total">
+        </form>
+        {% if total %}
+            <p>Total for {{ request.form.date_total }}: ${{ total }}</p>
+        {% endif %}
 
-    <!-- Delete expenses -->
-    <h2>Delete Expense</h2>
-    <form action="{{ url_for('fetch_expenses_for_delete') }}" method="POST">
-        <label for="delete_date">Date (YYYY-MM-DD):</label>
-        <input type="text" id="delete_date" name="delete_date" required>
-        <input type="submit" value="Fetch Expenses">
-    </form>
+        <!-- Delete expenses -->
+        <h2>Delete Expense</h2>
+        <form action="{{ url_for('fetch_expenses_for_delete') }}" method="POST">
+            <label for="delete_date">Date (YYYY-MM-DD):</label>
+            <input type="text" id="delete_date" name="delete_date" required>
+            <input type="submit" value="Fetch Expenses">
+        </form>
 
-    {% if delete_expenses %}
-        <h3>Expenses for {{ delete_date }}</h3>
-        <ul>
-            {% for expense in delete_expenses %}
-                <li>{{ expense.description }} - ${{ expense.amount }}
-                    <form action="{{ url_for('delete_expense') }}" method="POST" style="display:inline;">
-                        <input type="hidden" name="date" value="{{ delete_date }}">
-                        <input type="hidden" name="description" value="{{ expense.description }}">
-                        <input type="hidden" name="amount" value="{{ expense.amount }}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if delete_expenses %}
+            <h3>Expenses for {{ delete_date }}</h3>
+            <ul>
+                {% for expense in delete_expenses %}
+                    <li>{{ expense.description }} - ${{ expense.amount }}
+                        <form action="{{ url_for('delete_expense') }}" method="POST" style="display:inline;">
+                            <input type="hidden" name="date" value="{{ delete_date }}">
+                            <input type="hidden" name="description" value="{{ expense.description }}">
+                            <input type="hidden" name="amount" value="{{ expense.amount }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 
     {% if error %}
         <p style="color: red;">{{ error }}</p>
